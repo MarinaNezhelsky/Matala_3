@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Prediction</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: #000000;
+            background: #f5f5f5;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        #backgroundLogin {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/eden101-cmd/Information_systems_project/main/Background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        h1 {
+            color: white;
+            margin: 40px 0 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.6);
+            font-weight: bold;
+            font-size: 3em;
+            font-family: 'Roboto', sans-serif;
+        }
+        h2, h3 {
+    font-family: 'Roboto', sans-serif; /* Apply the custom font */
+}
+
+h2 {
+    font-size: 2em; /* Larger font size for the heading */
+    font-weight: bold; /* Make the text bold */
+    color: #007bff; /* A bright color for emphasis */
+    margin-top: 40px; /* Space above the heading */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Add a subtle shadow for better readability */
+}
+
+h3 {
+    font-size: 1.5em; /* Slightly smaller than h2 */
+    font-weight: 600; /* Semi-bold text */
+    color: #ff5722; /* A contrasting bright color for the prediction text */
+    background-color: #fff3e0; /* Light background color to make the text stand out */
+    padding: 10px; /* Add padding for spacing */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for a lifted effect */
+    display: inline-block; /* Ensure the background color and padding only apply to the text */
+    margin-top: 10px; /* Space above the text */
+}
+
+        form {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 400px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            margin: 15px 0 5px;
+            color: #000000;
+        }
+
+        input,
+        select {
+            display: block;
+            width: 100%;
+            margin: 0 0 15px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #f5f5f5;
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"%3E%3Cpath d="M7 10l5 5 5-5z" fill="%23333"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 12px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 20px 0 0;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .required::after {
+            content: " *";
+            color: red;
+            cursor: pointer;
+        }
+        .required::after:hover {
+            position: relative;
+        }
+        .required::after:hover::after {
+            content: 'Required field';
+            position: absolute;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 5px;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            top: 20px;
+            left: 0;
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+<!-- All the fields are required, except the supply score becuase its less intuitive
+ and you need to do some research before :). -->
+<body>
+    <div id="backgroundLogin"></div>
+    <h1>Car Price Prediction</h1>
+    <form id="predictionForm" action="{{ url_for('predict') }}" method="post">
+        <div class="form-group">
+            <label for="manufacture" class="required" title="Required field">Manufacture</label>
+            <div class="input-container">
+                <select id="manufacture" name="manufacture" required>
+                    <option value=""disabled selected>Select manufacture</option>
+                    <!-- We created a list of all the optional manufactures based on the file of the 
+                    written group members and the suitable manufactures  -->
+                    <option value="אאודי">אאודי</option>
+                    <option value="אלפא רומיאו">אלפא רומיאו</option>
+                    <option value="אופל">אופל</option>
+                    <option value="ב.מ.וו">ב.מ.וו</option>
+                    <option value="דייהטסו">דייהטסו</option>
+                    <option value="הונדה">הונדה</option>
+                    <option value="וולוו">וולוו</option>
+                    <option value="לקסוס">לקסוס</option>
+                    <option value="מאזדה">מאזדה</option>
+                    <option value="מיני">מיני</option>
+                    <option value="מיצובישי">מיצובישי</option>
+                    <option value="פיאט">פיאט</option>
+                    <option value="פולקסווגן">פולקסווגן</option>
+                    <option value="מרצדס">מרצדס</option>
+                    <option value="רנו">רנו</option>
+                    <option value="סובארו">סובארו</option>
+                    <option value="סוזוקי">סוזוקי</option>
+                    <option value="פורד">פורד</option>
+                    <option value="יונדאי">יונדאי</option>
+                    <option value="ניסאן">ניסאן</option>
+                    <option value="שברולט">שברולט</option>
+                    <option value="טויוטה">טויוטה</option>
+                    <option value="קיה">קיה</option>
+                    <option value="סיאט">סיאט</option>
+                    <option value="סיטרואן">סיטרואן</option>
+                    <option value="סקודה">סקודה</option>
+                    <option value="פיג'ו">פיג'ו</option>
+                    <option value="קרייזלר">קרייזלר</option>
+                    <option value="יגואר">יגואר</option>
+                    <option value="טסלה">טסלה</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="model" class="required" title="Required field">Model</label>
+            <span class="subtitle">Please enter the model name in Hebrew or in English uppercase letters.</span>
+            <div class="input-container">
+                <input type="text" id="model" name="model" required>
+            </div>
+            
+        </div>
+        
+        <!-- we added a logical range of car prices that can be inserted to our car price prediction website.
+         We know that there is a consideration of the car's year in the Data gov website (from 1996 to private cars and from 1998 to mercantile ones)
+         but we have cars here which dont have supply score and also thier Year is before the fllowing for exmaple: we have car with year of 1983,1988 and so on....-->
+        <div class="form-group">
+            <label for="year" class="required" title="Required field">Year</label>
+            <div class="input-container">
+                <select id="year" name="year" required>
+                    <option value="" disabled selected>Select a year</option>
+                    <script>
+                        let yearSelect = document.getElementById('year');
+                        let currentYear = new Date().getFullYear();
+                        for (let year = currentYear; year >= 1950; year--) {
+                            let option = document.createElement('option');
+                            option.value = year;
+                            option.textContent = year;
+                            yearSelect.appendChild(option);
+                        }
+                    </script>
+                </select>
+            </div>
+        </div>
+
+         <!-- we restricted the user to put only numbers from 0(new car) to the km number of his car: which have to be positive. -->
+        <div class="form-group">
+            <label for="km" class="required" title="Required field">Km</label>
+            <div class="input-container">
+                <input type="number" id="km" name="km" required min="0">
+            </div>
+        </div>
+
+         <!--  Hand range have to be between 0 to which positive number it is. -->
+        <div class="form-group">
+            <label for="hand" class="required" title="Required field">Hand</label>
+            <div class="input-container">
+                <input type="number" id="hand" name="hand" required min="0">
+            </div>
+        </div>
+
+        <!--  Capacity range have to be between 0 to which positive number it is. we know there are a lot of options that 
+              not included in our data and becuase of that we didn't do a dropdown list here.-->
+        <div class="form-group">
+            <label for="capacityEngine" class="required" title="Required field">Capacity Engine</label>
+            <div class="input-container">
+                <input type="number" id="capacityEngine" name="capacityEngine" required min="0">
+            </div>
+        </div>
+        
+        <!-- dropdown list because we know there are specific options for that field. -->
+        <div class="form-group">
+            <label for="engineType" class="required" title="Required field">Engine Type</label>
+            <div class="input-container">
+                <select id="engineType" name="engineType" required>
+                    <option value=""disabled selected>Select Engine Type</option>
+                    <option value="בנזין">בנזין</option>
+                    <option value="דיזל">דיזל</option>
+                    <option value="גז">גז</option>
+                    <option value="היברידי">היברידי</option>
+                    <option value="חשמלי">חשמלי</option>
+                    <option value="טורבו דיזל">טורבו דיזל</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- dropdown list because we know there are specific options for that field. -->
+        <div class="form-group">
+            <label for="gear" class="required" title="Required field">Gear</label>
+            <div class="input-container">
+                <select id="gear" name="gear" required>
+                    <option value=""disabled selected>Select Gear Type</option>
+                    <option value="ידנית">ידנית</option>
+                    <option value="אוטומטית">אוטומטית</option>
+                    <option value="רובוטית">רובוטית</option>
+                    <option value="טיפטרוניק">טיפטרוניק</option>
+                </select>
+            </div>
+        </div>
+
+         <!-- dropdown list because we know there are specific options for that field. -->
+        <div class="form-group">
+            <label for="previousOwnership" class="required" title="Required field">Previous Ownership</label>
+            <div class="input-container">
+                <select id="previousOwnership" name="previousOwnership" required>
+                    <option value=""disabled selected>Select Previous Ownership</option>
+                    <option value="פרטית">פרטית</option>
+                    <option value="חברה">חברה</option>
+                    <option value="ליסינג">ליסינג</option>
+                    <option value="מונית">מונית</option>
+                    <option value="חדש">חדש</option>
+                    <option value="ממשלתי">ממשלתי </option>
+                    <option value="השכרה">השכרה </option>
+                    <option value="אחר">אחר </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- dropdown list because we know there are specific options for that field. -->
+        <div class="form-group">
+            <label for="currentOwnership" class="required" title="Required field">Current Ownership</label>
+            <div class="input-container">
+                <select id="currentOwnership" name="currentOwnership" required>
+                    <option value=""disabled selected>Select current Ownership</option>
+                    <option value="פרטית">פרטית</option>
+                    <option value="חברה">חברה</option>
+                    <option value="ליסינג">ליסינג</option>
+                    <option value="מונית">מונית</option>
+                    <option value="ממשלתי">ממשלתי </option>
+                    <option value="השכרה">השכרה </option>
+                    <option value="אחר">אחר </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- we added the relevant options for the user to find out the supply score of its car, and if not we created a model that can prdict
+             it relevant supply score. -->
+        <div class="form-group">
+            <label for="supplyScore">Supply Score <span id="supplyScoreInfo" style="cursor: pointer;" title="Please click on the (?) for more information if you don't know the supply score">(?)</span></label>
+            <div class="input-container">
+                <input type="number" id="supplyScore" name="supplyScore" min="0" step="any">
+            </div>
+        </div>
+
+        <p id="supplyScoreURL" class="hidden">Please check your supply score here: <a href="https://data.gov.il/dataset/degem-rechev-wltp/resource/5e87a7a1-2f6f-41c1-8aec-7216d52a6cf6" target="_blank">https://data.gov.il/dataset/degem-rechev-wltp/resource/5e87a7a1-2f6f-41c1-8aec-7216d52a6cf6</a></p>
+
+        <button type="submit">Submit</button>
+        <h2>Prediction Price</h2>
+        <h3>{{ prediction_text }}</h3>
+    </form>
+
+    <script>
+        document.getElementById('supplyScoreInfo').addEventListener('click', function() {
+            var urlElement = document.getElementById('supplyScoreURL');
+            if (urlElement.classList.contains('hidden')) {
+                urlElement.classList.remove('hidden');
+            } else {
+                urlElement.classList.add('hidden');
+            }
+        });
+            
+    </script>
+
+
+</body>
+
+</html>
